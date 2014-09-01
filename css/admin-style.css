@@ -1,0 +1,23 @@
+/* Signature Metabox */
+.fs-meta {  }
+.fs-meta ul li { height: 20px; clear:both; margin: 0 0 15px 0;}
+.fs-meta ul li label { width: 160px; display:block; float:left; padding-top:4px; }
+.fs-meta ul li input { width:125px; display:block; float:left; }
+.fs-meta ul li input[type=radio], .fs-meta ul li input[type=checkbox] { width: auto; margin-top: 4px;}
+.fs-meta ul li em { width: 200px; display:block; float:left; color:gray; margin-left:10px; padding-top: 4px}
+
+.fs-meta ul li input[name=fs_signature_email], .fs-meta ul li input[name=fs_signature_referrer] { width: 250px;}
+.fs-meta ul li input[name=fs_signature_public] { width: 50px; }
+
+
+#titlediv #titlewrap label#title-prompt-text {
+    width: auto;
+    clip: auto;
+    height: auto;
+    display: block;
+    position: relative;
+}
+
+th#fs_col_newsletter, th#fs_col_public, th#fs_col_state {width: 40px;}
+th#fs_col_country {width: 55px;}
+th#fs_col_email, th#fs_col_moderate, th#fs_col_campaign, th#fs_col_registered {width: 80px;}

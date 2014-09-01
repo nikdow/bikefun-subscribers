@@ -1,0 +1,85 @@
+#register .leftcol {
+    text-align: right;
+    margin-right: 3px;
+    font-size: 14px;
+}
+#register .rightcol input {
+    width: 195px;
+}
+#register .smallfont {
+    font-size: 11px;
+    line-height: 13px;
+}
+#register input.inputc {
+    line-height: 15px;
+}
+#returnMessage {
+    font-weight: bold;
+}
+
+.removed {
+    display: none;
+}
+
+table#signatures th {
+    font-weight: bold;
+}
+
+.pagination {
+    clear:both;
+    padding:20px 0;
+    position:relative;
+    font-size:11px;
+    line-height:13px;
+}
+
+.pagination span, .pagination a {
+    display:block;
+    float:left;
+    margin: 0px 2px 0px 0;
+    padding:6px 9px 5px 9px;
+    text-decoration:none;
+    width:auto;
+    color:#fff;
+    background: #555;
+}
+.pagination a {
+    cursor: pointer;
+}
+
+.pagination a:hover{
+    color:#fff;
+    background: #3279BB;
+}
+
+.pagination .current, .pagination .inactive {
+    padding:0px 9px 0px 9px;
+    background: #3279BB;
+    color:#fff;
+}
+
+.row.liftup {
+    margin-top: -50px;
+}
+
+.smallfont {
+    font-size: 10px;
+    line-height: 1.1 ! important;
+}
+.medfont {
+    font-size: 12px;
+    line-height: 1.2 ! important;
+}
+.rightcol input.smallinput, .rightcol select.smallinput {
+    padding: 5px !important;
+    width: 100%;
+}
+.rightcol input, .rightcol select {
+    width: 50%;
+}
+.leftcol {
+    vertical-align: middle;
+}
+.fs-signatures-comments {
+    line-height: 1.1;
+}
