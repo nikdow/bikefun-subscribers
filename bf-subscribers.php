@@ -211,8 +211,8 @@ function bf_subscription_meta() {
     ?>
     <div class="bf-meta">
         <ul>
-            <li><label>Email</label><input name="bf_subscription_email" value="<?php echo $meta_email; ?>" /></li>
-            <li><label>Referrer</label><input name="bf_subscription_referrer" value="<?php echo $meta_referrer; ?>" /></li>
+            <li><label>Email</label><input name="bf_subscription_email" class="wide" value="<?php echo $meta_email; ?>" /></li>
+            <li><label>Referrer</label><input name="bf_subscription_referrer" class="wide" value="<?php echo $meta_referrer; ?>" /></li>
         </ul>
     </div>
     <?php    
