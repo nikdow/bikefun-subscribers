@@ -15,7 +15,7 @@ defined('ABSPATH') or die("No script kiddies please!");
 /*
  * Subscription AJAX calls
  */
-// request to edit an existing signature from page /confirm without a secret key in the query_string
+/* this unsubscribe is not used ! */
 add_action( 'wp_ajax_unsubscribe', 'bf_unsubscribe' );
 add_action( 'wp_ajax_nopriv_unsubscribe', 'bf_unsubscribe' );
 
@@ -48,6 +48,33 @@ function bf_unsubscribe() {
     echo json_encode ( array( 'success' => 'One last email is heading your way now, however no further action is required from you.' ) );
     die;
 }
+   /*
+     * Custom template for unsubscribe page
+    * 
+    * http://stackoverflow.com/questions/4647604/wp-use-file-in-plugin-directory-as-custom-page-template
+     */
+    add_action("template_redirect", 'unsubscribe_redirect');
+    function unsubscribe_redirect() {
+        global $post;
+        if( $post->post_title === "Unsubscribe") {
+            $templatefilename = 'page-unsubscribe.php';
+            if (file_exists(TEMPLATEPATH . '/' . $templatefilename)) {
+                $return_template = TEMPLATEPATH . '/' . $templatefilename;
+            } else {
+                $return_template = plugin_dir_path( __FILE__ ) . 'themefiles/' . $templatefilename;
+            }
+            do_theme_redirect($return_template);
+        }
+    }
+    function do_theme_redirect($url) {
+        global $wp_query;
+        if (have_posts()) {
+            include($url);
+            die();
+        } else {
+            $wp_query->is_404 = true;
+        }
+    }
 /*
  * AJAX call to add a new signature
  */
