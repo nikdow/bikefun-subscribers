@@ -6,6 +6,7 @@ Template Name: Unsubscribe
  */
 
 $email = $_GET['email'];
+if ( ! $email ) $email = $_POST['email'];
 
 get_header(); ?>
 
@@ -15,7 +16,10 @@ get_header(); ?>
                         <br/><br/>
 			<?php
                         if ( ! $email ) { ?>
-                            To unsubscribe from Bike Fun emails, click on the unsubscribe link at the bottom of any email.
+                            <form name='getemail' action='' method='post'>
+                                <label>email address to unsubscribe</label> <input name='email' type='email'/><br/>
+                                <input type="submit" name="Submit" class="button-primary" value="Unsubscribe" />
+                            </form>
                             <?php
                         } else {
                             global $wpdb;
@@ -26,7 +30,7 @@ get_header(); ?>
                             );
                             $meta_row = $wpdb->get_row ( $query, 'OBJECT' );
                             if ( $meta_row ) {
-                                wp_delete_post( $meta_row->post_id, true );
+                                wp_delete_post( $meta_row->post_id );
                                 
                                 $headers = array();
                                 $headers[] = 'From: Bike Fun <info@bikefun.org>';
