@@ -24,8 +24,8 @@ function bf_unsubscribe() {
 
     global $wpdb;
     $query = $wpdb->prepare( // find the custom post for this sig
-        "SELECT p.ID FROM " . $wpdb->posts . " p LEFT JOIN " . $wpdb->postmeta . " m ON m.post_id=p.ID "
-            . "WHERE m.meta_key='bf_subscribe_email' AND m.meta_value=%s AND (p.post_status='private' OR p.post_status='draft')",
+        "SELECT p.ID FROM " . $wpdb->posts . " p "
+            . "WHERE p.post_title=%s AND (p.post_status='private' OR p.post_status='draft')",
             $email );
     
     $id = $wpdb->get_col( $query );
@@ -99,11 +99,11 @@ function bf_newSubscription() {
     }
     global $wpdb;
     // check to see this email isn't already subscribed
-    $query = $wpdb->prepare('SELECT p.post_status as `status` FROM ' . $wpdb->posts . ' p LEFT JOIN ' . $wpdb->postmeta . ' m ON p.ID=m.post_id WHERE m.meta_key="bf_subscription_email" AND m.meta_value="%s"', $bf_subscription_email );
+    $query = $wpdb->prepare('SELECT p.post_status as `status` FROM ' . $wpdb->posts . ' p WHERE p.post_title="%s"', $bf_subscription_email );
     $results = $wpdb->get_results( $query );
     $found = false;
     foreach( $results as $row ) {
-        if( $row->status === 'private' || $row->status === 'draft' ) $found = true; // for this check we ignore drafts, so people can try again
+        if( $row->status === 'private' ) $found = true; // for this check we ignore drafts, so people can try again
     }
     if($found) {
         echo json_encode( array('error'=>'That email address is already registered.') );
@@ -113,21 +113,30 @@ function bf_newSubscription() {
         echo json_encode( array('error'=>'Please tick the box to show you are not a robot') );
         die;
     }
-        
-    $post_id = wp_insert_post(array(
-            'post_title'=>$title,
-            'post_status'=>'draft',
-            'post_type'=>'bf_subscription',
-            'ping_status'=>false,
-            'comment_status'=>'closed',
-        ),
-        true
-    );
-    if(is_wp_error($post_id)) {
-        echo json_encode( array( 'error'=>$post_id->get_error_message() ) );
-        die;
+    $query = $wpdb->prepare('SELECT p.post_status as `status` FROM ' . $wpdb->posts . ' p WHERE p.post_title="%s"', $bf_subscription_email );
+    $results = $wpdb->get_results( $query );
+    foreach( $results as $row ) {
+        if( $row->status === 'draft' ) $found = true; // for this check we ignore drafts, so people can try again
     }
-    update_post_meta($post_id, "bf_subscription_email", $bf_subscription_email );
+    if ( $found ) {
+        $post_id = $row->ID;
+    } else {
+
+        $post_id = wp_insert_post(array(
+                'post_title'=>$bf_subscription_email,
+                'post_status'=>'draft',
+                'post_type'=>'bf_subscription',
+                'ping_status'=>false,
+                'comment_status'=>'closed',
+            ),
+            true
+        );
+        if(is_wp_error($post_id)) {
+            echo json_encode( array( 'error'=>$post_id->get_error_message() ) );
+            die;
+        }
+    }
+//    update_post_meta($post_id, "bf_subscription_email", $bf_subscription_email );
     
     if(isset($_COOKIE['referrer'])) {
         $referrer = $_COOKIE['referrer'];
@@ -184,7 +193,7 @@ function create_bf_subscription() {
             'menu_icon' => "dashicons-welcome-write-blog",
             'hierarchical' => false,
             'rewrite' => false,
-            'supports'=> array() ,
+            'supports'=> array('title') ,
             'show_in_nav_menus' => true,
             )
     );
@@ -197,7 +206,8 @@ add_action ( "manage_posts_custom_column", "bf_subscription_custom_columns" );
 function bf_subscription_edit_columns($columns) {
     $columns = array(
         "cb" => "<input type=\"checkbox\" />",
-        "bf_col_email" => "email address",
+        "title" => "email",
+//        "bf_col_email" => "email address",
         "bf_col_referrer" => "Referrer",
     );
     return $columns;
@@ -206,9 +216,9 @@ function bf_subscription_custom_columns($column) {
     global $post;
     $custom = get_post_custom();
     switch ( $column ) {
-        case "bf_col_email":
+/*        case "bf_col_email":
             echo "<a href='" . admin_url() . "post.php?post=" . $post->ID . "&action=edit'>" . $custom['bf_subscription_email'][0] . "</a>";
-            break;
+            break; */
         case "fs_col_referrer":
             preg_match( '@^(?:http([s]*)://)?([^/]+)@i', $custom["bf_subscription_referrer"][0], $matches );
             $host = $matches[2];
@@ -230,7 +240,7 @@ function bf_subscription_create() {
 function bf_subscription_meta() {
     global $post;
     $custom = get_post_custom( $post->ID );
-    $meta_email = $custom['bf_subscription_email'][0];
+    $meta_email = $post->post_title; // $custom['bf_subscription_email'][0];
     $meta_referrer = $custom['bf_subscription_referrer'][0];
     
     echo '<input type="hidden" name="bf-subscription-nonce" id="bf-subscription-nonce" value="' .
@@ -238,11 +248,24 @@ function bf_subscription_meta() {
     ?>
     <div class="bf-meta">
         <ul>
-            <li><label>Email</label><input name="bf_subscription_email" class="wide" value="<?php echo $meta_email; ?>" /></li>
             <li><label>Referrer</label><input name="bf_subscription_referrer" class="wide" value="<?php echo $meta_referrer; ?>" /></li>
         </ul>
     </div>
     <?php    
+}
+
+/*
+ * label for title field on custom posts
+ */
+
+add_filter('enter_title_here', 'bf_subscription_enter_title');
+function bf_subscription_enter_title( $input ) {
+    global $post_type;
+
+    if ( 'bf_subscription' === $post_type ) {
+        return __( 'Subscriber email' );
+    }
+    return $input;
 }
 
 add_action ('save_post', 'save_bf_subscription');
@@ -264,7 +287,7 @@ function save_bf_subscription(){
         return $post;
     endif;
     update_post_meta( $post->ID, "bf_subscription_referrer", $_POST["bf_subscription_referrer"] );
-    update_post_meta($post->ID, "bf_subscription_email", $_POST["bf_subscription_email"]);
+//    update_post_meta($post->ID, "bf_subscription_email", $_POST["bf_subscription_email"]);
 }
 
 add_filter('post_updated_messages', 'subscription_updated_messages');

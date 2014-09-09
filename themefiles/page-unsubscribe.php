@@ -24,13 +24,13 @@ get_header(); ?>
                         } else {
                             global $wpdb;
                             $query = $wpdb->prepare ( 
-                                "SELECT * from " . $wpdb->postmeta . " m" . 
-                                " WHERE m.meta_key='bf_subscription_email' AND m.meta_value='%s'",
+                                "SELECT * from " . $wpdb->posts . " p" . 
+                                " WHERE p.post_title='%s'",
                                 $email
                             );
-                            $meta_row = $wpdb->get_row ( $query, 'OBJECT' );
-                            if ( $meta_row ) {
-                                wp_delete_post( $meta_row->post_id );
+                            $post = $wpdb->get_row ( $query, 'OBJECT' );
+                            if ( $post ) {
+                                wp_delete_post( $post->ID );
                                 
                                 $headers = array();
                                 $headers[] = 'From: Bike Fun <info@bikefun.org>';
