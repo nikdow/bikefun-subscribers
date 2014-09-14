@@ -38,11 +38,11 @@ function bf_unsubscribe() {
     
     $subject = "Unsubscribed from " . get_option('bf-organisation');
     $headers = array();
-    $headers[] = 'From: Bike Fun <' . get_option('bf-newsletter-sender') . '>';
+    $headers[] = 'From: ' . get_option('bf-organisation') . ' <' . get_option('bf-newsletter-sender') . '>';
     $headers[] = "Content-type: text/html";
-    $message = "<P>You have been unsubscribed from Bike Fun emails.</P>";
+    $message = "<P>You have been unsubscribed from ' . get_option('bf-organisation') . ' emails.</P>";
     $message .= "<P>If this comes as a surprise to you, just re-subscribe now.</p>";
-    $message .= "<P><a href='" .  get_site_url() . "'>Subscribe again here</a></P>";
+    $message .= "<P><a href='" .  get_site_url() . "/subscribe-to-bike-fun-newsletters' target='_blank'>Subscribe again here</a></P>";
     wp_mail( $email, $subject, $message, $headers );
     
     echo json_encode ( array( 'success' => 'One last email is heading your way now, however no further action is required from you.' ) );
@@ -150,12 +150,12 @@ function bf_newSubscription() {
     
     $subject = "Confirm your subscription to " . get_option('bf-organisation');
     $headers = array();
-    $headers[] = 'From: Bike Fun <' . get_option('bf-newsletter-sender') . '>';
+    $headers[] = 'From: ' . get_option('bf-organisation') . ' <' . get_option('bf-newsletter-sender') . '>';
     $headers[] = "Content-type: text/html";
-    $message = "<P>Thanks for subscribing to Bike Fun emails.</P>";
+    $message = "<P>Thanks for subscribing to ' . get_option('bf-organisation') . ' emails.</P>";
     $message .= "<P>Before we send you any emails, you need to click on the link below, so we know it wasn't a mistake.</p>";
     $message .= "<P>Don't worry, we don't give your email address to anyone, and you can unsubscribe any time you like.</P>";
-    $message .= "<P><a href=". get_site_url() . "'/confirm?secret=" . $secret . "'>Click here to verify your email address and start receiving Bike Fun emails</a></P>";
+    $message .= "<P><a href=". get_site_url() . "'/confirm?secret=" . $secret . "'>Click here to verify your email address and start receiving " . get_option('bf-organisation') . " emails</a></P>";
     wp_mail( $fs_signature_email, $subject, $message, $headers );
     
     echo json_encode( array( 'success'=>'You have successfully registered your email. Look for an email from us and click on the link to confirm your email address - until then we can\'t send you any newsletters.' ) );
@@ -183,7 +183,7 @@ function create_bf_subscription() {
         array(
             'label'=>__('Subscriptions'),
             'labels' => $labels,
-            'description' => 'Each post is one sign-up to the Bike Fun email newsletter.',
+            'description' => 'Each post is one sign-up to the ' . get_option('bf-organisation') . ' email newsletter.',
             'public' => true,
             'can_export' => true,
             'exclude_from_search' => true,
@@ -352,7 +352,7 @@ function fs_subscription_confirm () {
             <P>You have reached this page in error</P>
         <?php } 
     } else { ?>
-            <P>Thanks for confirming your signature. You will receive email newsletters from Bike Fun from now on.</P>
+            <P>Thanks for confirming your signature. You will receive email newsletters from <?=get_option('bf-organisation')?> from now on.</P>
     <?php } ?>
     <?php
     return ob_get_clean();

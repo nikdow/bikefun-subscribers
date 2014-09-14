@@ -45,10 +45,10 @@ get_header(); ?>
                                 wp_delete_post( $post->ID );
                                 
                                 $headers = array();
-                                $headers[] = 'From: Bike Fun <' . get_option('bf-newsletter-sender') . '>';
+                                $headers[] = 'From: ' . get_option('bf-organisation') . ' <' . get_option('bf-newsletter-sender') . '>';
                                 $headers[] = "Content-type: text/html";
                                 $subject = "Unsubscribed from " . get_option('bf-organisation');
-                                $message = "<P>Your address " . $email . " has been unsubscribed from Bike Fun emails.</P>";
+                                $message = "<P>Your address " . $email . " has been unsubscribed from " . get_option('bf-organisation') . " emails.</P>";
                                 $message .= "<P>If this comes as a surprise to you, just re-subscribe now.</p>";
                                 $message .= "<P><a href='" .  get_site_url() . "'>Subscribe again here</a></P>";
                                 $message .= "<P>The IP address of the computer used to unsubscribe you was " . $_SERVER['REMOTE_ADDR'];
