@@ -45,7 +45,7 @@ get_header(); ?>
                                 wp_delete_post( $post->ID );
                                 
                                 $headers = array();
-                                $headers[] = 'From: ' . get_option('bf-organisation') . ' <' . get_option('bf-newsletter-sender') . '>';
+                                $headers[] = 'From: ' . get_option('newsletter-sender-name') . ' <' . get_option('newsletter-sender-address') . '>';
                                 $headers[] = "Content-type: text/html";
                                 $subject = "Unsubscribed from " . get_option('bf-organisation');
                                 $message = "<P>Your address " . $email . " has been unsubscribed from " . get_option('bf-organisation') . " emails.</P>";
