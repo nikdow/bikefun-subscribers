@@ -12,8 +12,20 @@ get_header(); ?>
 
 	<div id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
+                    
+                    <header class="entry-header">
+                        <h1 class="entry-title"><?php the_title(); ?></h1>
+
+                    </header><!-- .entry-header -->
+
                     <div class="entry-content">
-                        <br/><br/>
+                        <?php while ( have_posts() ) : the_post(); ?>
+                            
+                            <?php the_content(); ?>
+                        <?php endwhile; ?>
+                    </div><!-- .entry-content -->
+                    
+                    <div class="entry-content">
 			<?php
                         if ( ! $email ) { ?>
                             <form name='getemail' action='' method='post'>
@@ -55,6 +67,9 @@ get_header(); ?>
                         ?>
                     </div>
 		</div><!-- #content -->
+                <footer class="entry-meta">
+                        <?php edit_post_link( __( 'Edit', 'twentythirteen' ), '<span class="edit-link">', '</span>' ); ?>
+                </footer><!-- .entry-meta -->
 	</div><!-- #primary -->
 
 <?php get_sidebar(); ?>
