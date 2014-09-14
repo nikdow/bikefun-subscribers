@@ -36,9 +36,9 @@ function bf_unsubscribe() {
         die;
     }
     
-    $subject = "Unsubscribed from Bikefun";
+    $subject = "Unsubscribed from " . get_option('bf-organisation');
     $headers = array();
-    $headers[] = 'From: Bike Fun <info@bikefun.org>';
+    $headers[] = 'From: Bike Fun <' . get_option('bf-newsletter-sender') . '>';
     $headers[] = "Content-type: text/html";
     $message = "<P>You have been unsubscribed from Bike Fun emails.</P>";
     $message .= "<P>If this comes as a surprise to you, just re-subscribe now.</p>";
@@ -143,19 +143,19 @@ function bf_newSubscription() {
     } else {
         $referrer = $_SERVER['HTTP_REFERER'];
     }
-    if(strpos($referrer, 'bikefun.org') !== false ) $referrer = "";
+    if(strpos($referrer, get_site_url() ) !== false ) $referrer = "";
     if($referrer) update_post_meta ( $post_id, "bf_subscription_referrer", substr( $referrer, 0, 255 ) );
     $secret = generateRandomString();
     update_post_meta ( $post_id, "bf_subscription_secret", $secret );
     
-    $subject = "Confirm your subscription to Bikefun.org";
+    $subject = "Confirm your subscription to " . get_option('bf-organisation');
     $headers = array();
-    $headers[] = 'From: Bike Fun <info@bikefun.org>';
+    $headers[] = 'From: Bike Fun <' . get_option('bf-newsletter-sender') . '>';
     $headers[] = "Content-type: text/html";
     $message = "<P>Thanks for subscribing to Bike Fun emails.</P>";
     $message .= "<P>Before we send you any emails, you need to click on the link below, so we know it wasn't a mistake.</p>";
     $message .= "<P>Don't worry, we don't give your email address to anyone, and you can unsubscribe any time you like.</P>";
-    $message .= "<P><a href='http://www.bikefun.org/confirm?secret=" . $secret . "'>Click here to verify your email address and start receiving Bike Fun emails</a></P>";
+    $message .= "<P><a href=". get_site_url() . "'/confirm?secret=" . $secret . "'>Click here to verify your email address and start receiving Bike Fun emails</a></P>";
     wp_mail( $fs_signature_email, $subject, $message, $headers );
     
     echo json_encode( array( 'success'=>'You have successfully registered your email. Look for an email from us and click on the link to confirm your email address - until then we can\'t send you any newsletters.' ) );
