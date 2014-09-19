@@ -38,7 +38,7 @@ function bf_unsubscribe() {
     
     $subject = "Unsubscribed from " . get_option('bf-organisation');
     $headers = array();
-    $headers[] = 'From: ' . get_option('bf-organisation') . ' <' . get_option('newsletter-sender-address') . '>';
+    $headers[] = 'From: "' . get_option('bf-organisation') . '" <' . get_option('newsletter-sender-address') . '>';
     $headers[] = "Content-type: text/html";
     $message = "<P>You have been unsubscribed from ' . get_option('bf-organisation') . ' emails.</P>";
     $message .= "<P>If this comes as a surprise to you, just re-subscribe now.</p>";
@@ -150,7 +150,7 @@ function bf_newSubscription() {
     
     $subject = "Confirm your subscription to " . get_option('bf-organisation');
     $headers = array();
-    $headers[] = 'From: ' . get_option('bf-organisation') . ' <' . get_option('newsletter-sender-address') . '>';
+    $headers[] = 'From: "' . get_option('bf-organisation') . '" <' . get_option('newsletter-sender-address') . '>';
     $headers[] = "Content-type: text/html";
     $message = "<P>Thanks for subscribing to ' . get_option('bf-organisation') . ' emails.</P>";
     $message .= "<P>Before we send you any emails, you need to click on the link below, so we know it wasn't a mistake.</p>";
