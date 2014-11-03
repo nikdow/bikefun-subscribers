@@ -11,7 +11,19 @@ defined('ABSPATH') or die("No script kiddies please!");
 /*
  * Subscriptions - custom post type and facilities to support the email newsletter
  */
-
+/*
+ * reminders to confirm subscription
+ */
+require_once plugin_dir_path ( __FILE__ ) . 'reminder.php';
+register_activation_hook(__FILE__, 'activate_reminders' );
+add_action ( 'bf_subscription_reminders', 'bf_reminder' ); // function bf_reminder defined in included file reminder.php
+function activate_reminders() {
+    wp_schedule_event( current_time( 'timestamp' ), 'daily', 'bf_subscription_reminders' );
+}
+register_deactivation_hook(__FILE__, 'deactivate_reminders' );
+function deactivate_reminders() {
+    wp_clear_scheduled_hook ( 'bf_subscription_reminders' );
+}
 /*
  * Subscription AJAX calls
  */
@@ -242,6 +254,7 @@ function bf_subscription_meta() {
     $custom = get_post_custom( $post->ID );
     $meta_email = $post->post_title; // $custom['bf_subscription_email'][0];
     $meta_referrer = $custom['bf_subscription_referrer'][0];
+    $meta_reminder = $custom['reminder_sent'][0];
     
     echo '<input type="hidden" name="bf-subscription-nonce" id="bf-subscription-nonce" value="' .
         wp_create_nonce( 'bf_subscription-nonce' ) . '" />';
@@ -249,6 +262,9 @@ function bf_subscription_meta() {
     <div class="bf-meta">
         <ul>
             <li><label>Referrer</label><input name="bf_subscription_referrer" class="wide" value="<?php echo $meta_referrer; ?>" /></li>
+            <li><label>Reminder sent:</label>
+                <input type='checkbox' value='1' name='reminder_sent' <?=$meta_reminder==1 ? "CHECKED" : ""; ?> />
+            </li>
         </ul>
     </div>
     <?php    
@@ -287,6 +303,11 @@ function save_bf_subscription(){
         return $post;
     endif;
     update_post_meta( $post->ID, "bf_subscription_referrer", $_POST["bf_subscription_referrer"] );
+     if(isset ( $_POST['reminder_sent'] ) ) {
+        update_post_meta ( $post->ID, "reminder_sent", 1 );
+    } else {
+        delete_post_meta ( $post->ID, "reminder_sent" );
+    }
 //    update_post_meta($post->ID, "bf_subscription_email", $_POST["bf_subscription_email"]);
 }
 
