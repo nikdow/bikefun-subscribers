@@ -416,7 +416,7 @@ function bf_subscription_sign ( $atts ) {
     </form>
 <?php return ob_get_clean();
 }
-add_shortcode('subscription', bf_subscription_sign );
+add_shortcode('subscription', 'bf_subscription_sign' );
 
 function fs_subscriptions_enqueue_scripts(  ) {
     global $post;
