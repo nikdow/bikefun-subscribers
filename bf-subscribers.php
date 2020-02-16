@@ -424,15 +424,3 @@ function fs_subscriptions_enqueue_scripts(  ) {
     wp_enqueue_style( 'admin-style', plugins_url( 'css/admin-style.css' , __FILE__ ) );
 }
 add_action( 'admin_enqueue_scripts', 'fs_subscriptions_enqueue_scripts' );
-/*
- * set cookies for referrer and campaign
- */
-add_action( 'init', 'bf_subscription_head_cookies' );
-function bf_subscription_head_cookies() {
-    if(isset($_COOKIE['referrer'])) {
-        $referrer = $_COOKIE['referrer'];
-    } else {
-        $referrer = $_SERVER['HTTP_REFERER'];
-        setcookie('referrer', $referrer, 0, '/' );
-    }
-}

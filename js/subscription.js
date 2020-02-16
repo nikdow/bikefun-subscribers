@@ -1,5 +1,7 @@
 jQuery(document).ready(function($){
     $('#email').focus();
+
+    setReferrerCookie();
     
     $('#saveButton').bind('click', function (event) {
         var err = false;
@@ -39,8 +41,13 @@ jQuery(document).ready(function($){
       } );
     });
 
+function setReferrerCookie(){
+    if( document.cookie.replace(/(?:(?:^|.*;\s*)referrer\s*\=\s*([^;]*).*$)|^.*$/, "$1") !== "true" ){
+        document.cookie = "referrer=" . document.referrer;
+    }
+}
+
 function checkEmail(inputvalue){	
-var pattern=/^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+/;
-var bool = pattern.test(inputvalue);
-return bool;
+    var pattern=/^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+/;
+    return pattern.test(inputvalue);
 }
