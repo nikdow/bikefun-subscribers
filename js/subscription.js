@@ -43,7 +43,7 @@ jQuery(document).ready(function($){
 
 function setReferrerCookie(){
     if( document.cookie.replace(/(?:(?:^|.*;\s*)referrer\s*\=\s*([^;]*).*$)|^.*$/, "$1") !== "true" ){
-        document.cookie = "referrer=" . document.referrer;
+        document.cookie = "referrer=" + document.referrer;
     }
 }
 
