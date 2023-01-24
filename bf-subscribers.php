@@ -68,7 +68,7 @@ function bf_unsubscribe() {
     add_action("template_redirect", 'unsubscribe_redirect');
     function unsubscribe_redirect() {
         global $post;
-        if( $post->post_title === "Unsubscribe") {
+        if( $post?->post_title === "Unsubscribe") {
             $templatefilename = 'page-unsubscribe.php';
             if (file_exists(TEMPLATEPATH . '/' . $templatefilename)) {
                 $return_template = TEMPLATEPATH . '/' . $templatefilename;
