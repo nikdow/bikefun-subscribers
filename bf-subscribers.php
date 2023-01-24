@@ -339,7 +339,7 @@ function subscription_updated_messages( $messages ) {
 /*
  * Shortcode for confirming subscription
  */
-function fs_subscription_confirm () {
+function bf_subscription_confirm () {
     
     $secret = $_GET['secret'];
     $email = $_GET['email'];
